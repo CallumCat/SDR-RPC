@@ -40,9 +40,9 @@ name: .NET Core Desktop
 
 on:
   push:
-    branches: [ "rebase" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "rebase" ]
+    branches: [ "master" ]
 
 jobs:
 
