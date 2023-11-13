@@ -59,7 +59,7 @@
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
             this.label1.Location = new System.Drawing.Point(0, 28);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(200, 22);
+            this.label1.Size = new System.Drawing.Size(200, 132);
             this.label1.TabIndex = 1;
             this.label1.Text = "Loading status...";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -90,9 +90,9 @@
             this.Controls.Add(this.checkBox1);
             this.Font = new System.Drawing.Font("Verdana", 7F);
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.MinimumSize = new System.Drawing.Size(200, 50);
+            this.MinimumSize = new System.Drawing.Size(200, 160);
             this.Name = "SettingsPanel";
-            this.Size = new System.Drawing.Size(200, 50);
+            this.Size = new System.Drawing.Size(200, 160);
             this.Load += new System.EventHandler(this.SettingsPanel_Load);
             this.ResumeLayout(false);
 
