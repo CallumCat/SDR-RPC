@@ -34,7 +34,7 @@ namespace EnderIce2.SDRSharpPlugin
                 LargeImageKey = "image_large",
                 LargeImageText = "SDRSharp",
                 SmallImageKey = "image_small",
-                SmallImageText = $"SDR-RPC Plugin v{Assembly.LoadFrom("SDR-RPC.dll").GetName().Version}"
+                SmallImageText = $"Listening to my SDR"
             }
         };
 
@@ -44,9 +44,9 @@ namespace EnderIce2.SDRSharpPlugin
             _control = control;
             if (Utils.GetBooleanSetting("EnableRPC", true))
             {
-                if (Utils.GetStringSetting("ClientID").Replace(" ", "").Length != 18)
+                if (Utils.GetStringSetting("ClientID").Replace(" ", "").Length !>= 18)
                 {
-                    Utils.SaveSetting("ClientID", "765213507321856078");
+                    Utils.SaveSetting("ClientID", "1171882286929678366");
                 }
                 client = new DiscordRpcClient(Utils.GetStringSetting("ClientID"), pipe: discordPipe)
                 {
@@ -111,17 +111,24 @@ namespace EnderIce2.SDRSharpPlugin
                             {
                                 // TODO: Check BandPlan.xml file and set in the status
                                 LogWriter.WriteToFile("Setting presence...");
-                                string frequency_text = $"Frequency: {$"{_control.Frequency:#,0,,0 Hz}"} | Bandwidth: {$"{_control.FilterBandwidth:#,0,,0 Hz}"} | {Enum.GetName(typeof(DetectorType), _control.DetectorType)}";
-                                presence.Details = frequency_text;
+                                double frequencymhz = _control.Frequency * 0.000001;
+                                double mhzfrequnrounded = Math.Round(frequencymhz, 2);
+                                string mhzfreq = mhzfrequnrounded.ToString();
+                                double filterbandwidthkhz = _control.FilterBandwidth * 0.001;
+                                string khzbandwidth = filterbandwidthkhz.ToString();
+
                                 switch (_control.DetectorType)
                                 {
                                     case DetectorType.WFM:
+                                        string frequency_text = $"Frequency: {mhzfreq} MHz | Bandwidth: {$"{khzbandwidth} KHz"} | {Enum.GetName(typeof(DetectorType), _control.DetectorType)}";
+                                        presence.Details = frequency_text;
                                         if (!string.IsNullOrWhiteSpace(_control.RdsRadioText + _control.RdsProgramService))
                                         {
                                             string radio_text = string.IsNullOrWhiteSpace(_control.RdsRadioText) ? "" : $" - {_control.RdsRadioText}";
+                                            string picode = string.Format("{0:x}", _control.RdsPICode);
                                             presence.State = _control.FmStereo
-                                                ? $"RDS: ((( {_control.RdsProgramService} ))){radio_text}"
-                                                : $"RDS: {_control.RdsProgramService}{radio_text}";
+                                                ? $"RDS: ((( {_control.RdsProgramService} ))) - {picode} {radio_text}"
+                                                : $"RDS: {_control.RdsProgramService} - {picode} {radio_text}";
                                         }
                                         else
                                         {
@@ -129,6 +136,8 @@ namespace EnderIce2.SDRSharpPlugin
                                         }
                                         break;
                                     default:
+                                        string frequency_text2 = $"Frequency: {$"{_control.Frequency:#.0..0 Hz}"} | Bandwidth: {$"{_control.FilterBandwidth:#.0..0 Hz}"} | {Enum.GetName(typeof(DetectorType), _control.DetectorType)}";
+                                        presence.Details = frequency_text2;
                                         presence.State = ""; // TODO: implement for every type; right now I don't really know what to add
                                         break;
                                 }
